@@ -15,8 +15,23 @@ const displayEvents = async (req, res) => {
     console.log(error);
   }
 };
+const displayEvent = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const event = await Event.find({ _id: id });
+    const dayEvent = await DayEvent.find({ _id: id });
+    return res.status(200).json({
+      data: {
+        event,
+        dayEvent,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-const createGet = (req, res) => {
+const create = (req, res) => {
   res.render("create");
 };
 
@@ -30,7 +45,7 @@ const createPost = (req, res) => {
     .catch((e) => {});
 };
 
-const post_createAllDayEvent = (req, res) => {
+const createAllDayEvent_post = (req, res) => {
   const event = new DayEvent({ ...req.body, createdBy: req.user._id });
   event
     .save()
@@ -74,7 +89,7 @@ const updateAllDayEvent = (req, res) => {
     });
 };
 
-const get_createAllDayEvent = (req, res) => {
+const createAllDayEvent = (req, res) => {
   res.render("createAllDayEvent");
 };
 
@@ -103,12 +118,13 @@ const eventAllDayDelete = (req, res) => {
 
 module.exports = {
   displayEvents,
-  createGet,
+  displayEvent,
+  create,
   createPost,
   updateEvent,
   eventDelete,
-  get_createAllDayEvent,
-  post_createAllDayEvent,
+  createAllDayEvent,
+  createAllDayEvent_post,
   eventAllDayDelete,
   updateAllDayEvent,
 };

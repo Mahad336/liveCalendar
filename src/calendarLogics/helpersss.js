@@ -8,8 +8,6 @@ let eventsAllDay;
 const eventModal = document.querySelector("#editEvent");
 const allDayEventModal = document.querySelector("#editAllDayEvent");
 
-//Assign id to every time set (e.g 1:00, 1:30, 2:00, 2:30)
-
 function init() {
   allDayEventsSelector = document.querySelector(".all-day-task");
   for (let i = 0; i < 24; i++) {

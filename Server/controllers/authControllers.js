@@ -28,7 +28,7 @@ const handleErrors = (err) => {
 const maxAge = 3 * 24 * 60 * 60;
 
 const createToken = (id) => {
-  return jwt.sign({ id }, "theSecret_Signature", { expiresIn: maxAge });
+  return jwt.sign({ id }, process.env.secretKey, { expiresIn: maxAge });
 };
 
 const signup_get = (request, response) => {
@@ -49,8 +49,8 @@ const signup_post = async (request, response) => {
   try {
     const user = await User.create({ email, password, firstName, lastName });
     const token = createToken(user._id);
-    response.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-    response.status(201).json({ user: user._id });
+    response.cookie("jwt", token, { maxAge: maxAge * 1000 });
+    response.status(201).json({ user: user._id, email: user.email });
   } catch (error) {
     const errors = handleErrors(error);
     response.status(404).json({ errors });
@@ -63,7 +63,7 @@ const login_post = async (request, response) => {
     const user = await User.login(email, password);
     const token = createToken(user._id);
 
-    response.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    response.cookie("jwt", token, { maxAge: maxAge * 1000 });
     response.status(200).json({ user: user._id, email: user.email });
   } catch (err) {
     const errors = handleErrors(err);

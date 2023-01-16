@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, "Please enter email"],
+    required: [true, "Title is mandatory"],
   },
   location: {
     type: String,
-    required: [true, "Please enter email"],
+    required: [true, "Location is mandatory"],
   },
   createdBy: {
     type: String,

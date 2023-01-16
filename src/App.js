@@ -1,33 +1,39 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
-import Calendar from "./Calendar";
+import "./calendarLogics/index.css";
+import Calendar from "./calendarLogics/Calendar";
 import NavBar from "./NavBar";
-import LogIn from "./LogIn";
-import Create from "./Create";
-import CreateAllDay from "./CreateAllDay";
-import SignUp from "./SignUp";
+import Create from "./createEvent/Create";
+import CreateAllDay from "./createEvent/CreateAllDay";
+import Form from "./auth/form";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Footer from "./Footer";
-
+import PrivateRoutes from "./PrivateRoutes";
+import AutoComplete from "./APIs/AutoComplete";
+import EventUpdate from "./updateEvents/eventUpdate";
+import AllDayEventUpdate from "./updateEvents/alldayEventUpdate";
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<LogIn />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="create-event" element={<Create />} />
-          <Route path="create-all-day" element={<CreateAllDay />} />
-          <Route path="sign-up" element={<SignUp />} />
-
-          {/* <Route path="*" element={<Error404 />} /> */}
-
-          {/* <Route path="*" element={<Error404 />} /> */}
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <>
+      <Router>
+        <div className="App">
+          <NavBar />
+          <Routes>
+            <Route element={<PrivateRoutes />}>
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/create-event" element={<Create />} />
+              <Route path="/create-all-day" element={<CreateAllDay />} />
+              <Route path="/event-update/:id" element={<EventUpdate />} />
+              <Route
+                path="/allDayEvent-update/:id"
+                element={<AllDayEventUpdate />}
+              />
+            </Route>
+            <Route path="/" element={<Form />} />
+            <Route path="/form" element={<Form />} />
+            <Route path="/auto" element={<AutoComplete />} />
+          </Routes>
+        </div>
+      </Router>
+    </>
   );
 }
 

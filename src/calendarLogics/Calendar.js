@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { ChevronCompactLeft } from "react-bootstrap-icons";
-import AllDayEvent from "./AllDayEvent";
-import { alignTasks } from "./helper/alignTasks";
+import AllDayEvent from "../eventLogics/AllDayEvent";
+import { alignTasks } from "./alignTasks";
 import Hour from "./Hour";
+import { Box } from "@chakra-ui/react";
 
 const Calendar = () => {
   const amHours = [];
@@ -50,7 +50,7 @@ const Calendar = () => {
     <div className="calendar">
       <header>
         <p>
-          Friday,<span> </span> April 1
+          Funday,<span> </span> Nov 2
         </p>
       </header>
       <div className="all-day-task">

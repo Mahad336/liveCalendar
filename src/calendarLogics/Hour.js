@@ -1,4 +1,5 @@
-import Event from "./Event";
+import Event from "../eventLogics/Event";
+import { Box } from "@chakra-ui/react";
 
 const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
   const eventListTop = [];
@@ -46,20 +47,22 @@ const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
     });
 
   return (
-    <div className="hour">
-      <div className="full">{currentHour + ":00"}</div>
-      <div className="half">
-        <div id={`full-${currentHour}`} className="half-top">
-          {eventListTop}
-        </div>
-        <div className="half-bottom">
-          <div className="half-bottom-1">{currentHour + ":30"}</div>
-          <div className="half-bottom-2" id={`half-${currentHour}`}>
-            {eventListBot}
+    <Box filter="auto" brightness="90%">
+      <div className="hour">
+        <div className="full">{currentHour + ":00"}</div>
+        <div className="half">
+          <div id={`full-${currentHour}`} className="half-top">
+            {eventListTop}
+          </div>
+          <div className="half-bottom">
+            <div className="half-bottom-1">{currentHour + ":30"}</div>
+            <div className="half-bottom-2" id={`half-${currentHour}`}>
+              {eventListBot}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 

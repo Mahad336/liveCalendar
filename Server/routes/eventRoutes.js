@@ -3,10 +3,11 @@ const router = Router();
 const eventController = require("../controllers/eventControllers");
 
 router.get("/", eventController.displayEvents);
-router.get("/create", eventController.createGet);
-router.get("/create-all-day-event", eventController.get_createAllDayEvent);
+router.post("/eventUpdate/:id", eventController.displayEvent);
+router.get("/create", eventController.create);
+router.get("/create-all-day-event", eventController.createAllDayEvent);
 router.post("/create", eventController.createPost);
-router.post("/create-all-day-event", eventController.post_createAllDayEvent);
+router.post("/create-all-day-event", eventController.createAllDayEvent_post);
 router.put("/update", eventController.updateEvent);
 router.put("/updateAllDayEvent", eventController.updateAllDayEvent);
 router.delete("/deleteAllDayEvent/:id", eventController.eventAllDayDelete);
