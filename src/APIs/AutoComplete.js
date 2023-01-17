@@ -17,7 +17,9 @@ export default function AutoComplete(props) {
 
   const [address, setAddress] = React.useState("");
   const [coordinates, setCoordinates] = React.useState({
-
+    lat: null,
+    lng: null,
+  });
 
   const handleSelect = async (value) => {
     const results = await geocodeByAddress(value);
