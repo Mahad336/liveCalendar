@@ -2,6 +2,10 @@
   "name": "react-calendar",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node" : "19.3.0",
+    "npm" : "9.2.0"
+  },
   "proxy": "https://react-calendar-chakraserver-production.up.railway.app",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.16",
