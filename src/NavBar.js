@@ -8,9 +8,7 @@ import {
   useColorMode,
   Image,
 } from "@chakra-ui/react";
-import { CalendarIcon, CheckIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import clock from "./calendarLogics/clock/clock.jpg";
-import clndr from "./calendarLogics/clock/calendar.jpg";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import clc from "./calendarLogics/clock/clc.png";
 
 const NavBar = () => {
@@ -25,10 +23,8 @@ const NavBar = () => {
       headers: { "Content-Type": "application/json" },
     })
       .then((result) => {
-        // if (result.ok) {
         localStorage.removeItem("email");
         navigate("/form");
-        //}
       })
       .catch((err) => console.log(err));
   };
@@ -37,28 +33,28 @@ const NavBar = () => {
   return (
     <Flex
       bg={bgColor[colorMode]}
+      bgGradient="linear(to-r, gray.400, darkgray)"
       w="100%"
       color={textColor[colorMode]}
       boxShadow="md"
     >
-      <Flex p={5} ml={7} w="100%">
-        {email && (
-          <>
+      <Flex p={1} ml={7} w="100%">
+        <>
+          {email && (
             <Flex
               gap={2}
-              justifyContent="start"
+              justifyContent="space-evenly"
               alignItems="center"
-              width="100%"
+              width="30%"
             >
               <Text>{email}</Text>
               <a onClick={logOut}>
-                <Button ml={5} color="teal.700" size="sm">
+                <Button color="teal.700" size="sm">
                   Logout
                 </Button>
               </a>
               <Box>
                 <IconButton
-                  ml={5}
                   rounded="full"
                   onClick={toggleColorMode}
                   icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
@@ -66,30 +62,64 @@ const NavBar = () => {
                   Change Color Mode
                 </IconButton>
               </Box>
+
+              <Image
+                display="flex"
+                src={clc}
+                boxSize={20}
+                cursor="pointer"
+                onClick={() => navigate("/calendar")}
+              ></Image>
             </Flex>
-            <Image src={clc} boxSize={20}></Image>
+          )}
+          {!email && (
+            <Box width="80%" ml="20%" display="flex" justifyContent="center">
+              <Text
+                boxShadow="2xl"
+                fontSize="6xl"
+                fontFamily="sans-serif"
+                color="blackAlpha.800"
+                borderRadius="md"
+                bgGradient="linear(to-t, gray.400, gray.500)"
+              >
+                CALENDAR
+              </Text>
+            </Box>
+          )}
+          {email && (
+            <Box width="40%" display="flex" justifyContent="center">
+              <Text
+                boxShadow="2xl"
+                fontSize="6xl"
+                fontFamily="sans-serif"
+                color="blackAlpha.800"
+                borderRadius="md"
+                bgGradient="linear(to-t, gray.400, gray.500)"
+              >
+                CALENDAR
+              </Text>
+            </Box>
+          )}
+
+          {email && (
             <Flex
               color={textColor[colorMode]}
-              ml={35}
-              w="45%"
+              w="30%"
               justifyContent="space-evenly"
               alignItems="center"
             >
-              <Link to="calendar" className="nav-link">
-                View Calendar
-              </Link>
-              <Link to="create-event" className="nav-link">
-                Create Event
-              </Link>
-              <Link to="create-all-day" className="nav-link">
-                Create All-Day Event
-              </Link>
+              {!window.location.href.includes("calendar") && (
+                <Link to="calendar">View Calendar</Link>
+              )}
+              <Link to="create-event">Create Event</Link>
+              <Link to="create-all-day">Create All-Day Event</Link>
             </Flex>
-          </>
-        )}
+          )}
+        </>
+
         {!email && (
           <>
-            <Flex gap={2} justifyContent="end" alignItems="center" width="100%">
+            <Flex gap={2} justifyContent="end" alignItems="center" width="20%">
               <Link to="/form">
                 <Button ml={5} color="teal.500" size="sm" href="sign-up">
                   Register

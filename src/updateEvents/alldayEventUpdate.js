@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AutoComplete from "../APIs/AutoComplete";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Input,
   Stack,
@@ -9,15 +9,12 @@ import {
   Button,
   FormControl,
   Divider,
-  Text,
   FormLabel,
   Flex,
-  Select,
   Container,
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader";
-import { Envelope } from "react-bootstrap-icons";
 
 const AllDayEventUpdate = ({ event }) => {
   const time = [];

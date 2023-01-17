@@ -30,8 +30,8 @@ const Form = () => {
         bg={colorMode === "light" ? "gray.200" : "gray.600"}
         w="350px"
         p={3}
-        boxShadow="sm"
         rounded="lg"
+        boxShadow="2xl"
       >
         <Tabs variant="enclosed-colored" isFitted m={4}>
           <TabList>
