@@ -105,17 +105,6 @@ const Create = () => {
                   />
                 </InputGroup>
               </FormControl>
-              {/* <FormControl isRequired>
-                <FormLabel>Location</FormLabel>
-                <InputGroup>
-                  <InputLeftElement children={<InfoIcon />} />
-                  <Input
-                    type="name"
-                    placeholder="Location e.g isb, lahore, chicago"
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </InputGroup>
-              </FormControl> */}
               <AutoComplete handleSetLocation={handleSetLocation} />
               <Divider borderColor="gray.300" />
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Input,
@@ -9,16 +9,21 @@ import {
   FormControl,
   Divider,
   Text,
+  Box,
+  Flex,
 } from "@chakra-ui/react";
 import { InfoIcon, EmailIcon, LockIcon } from "@chakra-ui/icons";
+import PasswordChecklist from "react-password-checklist";
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -86,13 +91,26 @@ const SignupForm = () => {
             <Input
               type="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </InputGroup>
+        </FormControl>
+        <FormControl isRequired>
+          <InputGroup>
+            <InputLeftElement children={<LockIcon />} />
+            <Input
+              type="password"
+              placeholder="Confirm Password"
+              onChange={(e) => setCPassword(e.target.value)}
             />
           </InputGroup>
         </FormControl>
         <Text color="red">{passwordError}</Text>
         {!isPending && (
           <Button
+            className="btn"
             type="submit"
             boxShadow="sm"
             _hover={{ boxShadow: "md" }}
@@ -107,11 +125,31 @@ const SignupForm = () => {
             loadingText="Submitting"
             colorScheme="teal"
             variant="outline"
-            disabled
           >
             Signing-Up
           </Button>
         )}
+        <FormControl isRequired>
+          <Box overflow="hidden">
+            <PasswordChecklist
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+              className="check"
+              rules={["minLength", "specialChar", "number", "capital", "match"]}
+              minLength={8}
+              value={password}
+              valueAgain={cPassword}
+              onChange={(isValid) => {
+                isValid
+                  ? (document.querySelector(".btn").disabled = false)
+                  : (document.querySelector(".btn").disabled = true);
+              }}
+            />
+          </Box>
+        </FormControl>
       </Stack>
     </form>
   );
