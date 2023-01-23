@@ -5,12 +5,8 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
   Button,
   Portal,
   Text,
@@ -40,7 +36,6 @@ const AllDayEvent = ({ event, isUpdated }) => {
 
   return (
     <>
-      <box></box>
       <div
         className="event-all-day"
         id={event._id}

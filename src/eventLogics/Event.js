@@ -61,40 +61,16 @@ const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
         className={className}
         ref={ref}
         id={event._id}
-        style={{ height: `${height}`, position: "relative", cursor: "default" }}
+        style={{ height: `${height}`, position: "relative", cursor: "pointer" }}
+        onClick={handleShow}
       >
-        <p>{time}</p>
-        <h5>{event.title}</h5>
-        <span>{event.location}</span>
-        <Popover size={30} placement="left-start">
-          <PopoverTrigger>
-            <Button
-              position="absolute"
-              right="10px"
-              top="5px"
-              cursor="pointer"
-              width="auto"
-              padding={0}
-              bg="none"
-            >
-              <FiMoreVertical size={30} />
-            </Button>
-          </PopoverTrigger>
-
-          <Portal>
-            <PopoverContent maxW="fit-content" float="right">
-              <PopoverArrow />
-              <PopoverBody display="flex" flexDir="column">
-                <Button colorScheme="gray" mb={2} onClick={handleShow}>
-                  Edit
-                </Button>
-                <Button colorScheme="gray" onClick={handleDelete}>
-                  Delete
-                </Button>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
+        <div className="content">
+          <p>{time}</p>
+          <h5>{event.title}</h5>
+          <span>{event.location}</span>
+          <h5 style={{ display: "none" }}>{startTime}</h5>
+          <h5 style={{ display: "none" }}>{endTime}</h5>
+        </div>
       </div>
     </>
   );

@@ -7,11 +7,11 @@ import { CookiesProvider } from "react-cookie";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  // <React.StrictMode>
-  <ChakraProvider>
-    <CookiesProvider>
-      <App />
-    </CookiesProvider>
-  </ChakraProvider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <ChakraProvider>
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
+    </ChakraProvider>
+  </React.StrictMode>
 );

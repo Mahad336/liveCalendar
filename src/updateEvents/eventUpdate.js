@@ -42,7 +42,7 @@ const EventUpdate = ({ event }) => {
   const openedEvent = localStorage.getItem("updatingEvent");
   let Title = JSON.parse(openedEvent)?.title;
   let Loc = JSON.parse(openedEvent)?.location;
-  localStorage.removeItem("updatingEvent");
+  //localStorage.removeItem("updatingEvent");
 
   const handleDisable = (e) => {
     let allEndTimes = document.querySelector(".allEndTimes").childNodes;
@@ -96,10 +96,24 @@ const EventUpdate = ({ event }) => {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const endpoint = `/events/delete/${id}`;
+
+    fetch(endpoint, { method: "DELETE" })
+      .then((response) => response.json())
+      .then(() => {
+        navigate("/calendar");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Flex justify="center" alignItems="center" h="91vh" w="100%">
-        <form action="submit" onSubmit={handleSubmit}>
+        <form action="submit">
           <Container boxShadow="2xl" minW="30vw">
             <Stack spacing={3} pb={25}>
               <FormControl isRequired>
@@ -114,17 +128,7 @@ const EventUpdate = ({ event }) => {
                   />
                 </InputGroup>
               </FormControl>
-              {/* <FormControl isRequired>
-                <FormLabel>Location</FormLabel>
-                <InputGroup>
-                  <InputLeftElement children={<InfoIcon />} />
-                  <Input
-                    type="name"
-                    placeholder="Location e.g isb, lahore, chicago"
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </InputGroup>
-              </FormControl> */}
+
               <AutoComplete handleSetLocation={handleSetLocation} Loc={Loc} />
               <Divider borderColor="gray.300" />
 
@@ -154,14 +158,26 @@ const EventUpdate = ({ event }) => {
                 </Select>
               </FormControl>
               {!isPending && (
-                <Button
-                  type="submit"
-                  boxShadow="sm"
-                  _hover={{ boxShadow: "md" }}
-                  _active={{ boxShadow: "lg" }}
-                >
-                  Update
-                </Button>
+                <>
+                  <Button
+                    type="submit"
+                    boxShadow="sm"
+                    _hover={{ boxShadow: "md" }}
+                    _active={{ boxShadow: "lg" }}
+                    onClick={handleSubmit}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    type="submit"
+                    boxShadow="sm"
+                    _hover={{ boxShadow: "md" }}
+                    _active={{ boxShadow: "lg" }}
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </>
               )}
               {isPending && (
                 <>

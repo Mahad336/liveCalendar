@@ -16,17 +16,12 @@ export default function AutoComplete(props) {
   const { handleSetLocation, Loc } = props;
 
   const [address, setAddress] = React.useState("");
-  const [coordinates, setCoordinates] = React.useState({
-    lat: null,
-    lng: null,
-  });
 
   const handleSelect = async (value) => {
     const results = await geocodeByAddress(value);
     const latLng = await getLatLng(results[0]);
     handleSetLocation(value);
     setAddress(value);
-    setCoordinates(latLng);
   };
 
   return (
@@ -38,7 +33,7 @@ export default function AutoComplete(props) {
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
           <div>
-            <FormControl isRequired>
+            <FormControl>
               <FormLabel>Location</FormLabel>
               <InputGroup>
                 <InputLeftElement children={<InfoIcon />} />

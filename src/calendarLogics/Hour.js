@@ -5,7 +5,8 @@ const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
   const eventListTop = [];
   const eventListBot = [];
   events &&
-    events.sort((a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? 1 : -1));
+    events.sort((a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? -1 : 1));
+
   events &&
     events.forEach((event) => {
       let startTime = new Date(event.startAt);
