@@ -18,12 +18,13 @@ const NavBar = () => {
 
   const navigate = useNavigate();
   const logOut = () => {
-    const result = fetch("/logout", {
+    fetch("/logout", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then((result) => {
         localStorage.removeItem("email");
+        localStorage.clear();
         navigate("/form");
       })
       .catch((err) => console.log(err));

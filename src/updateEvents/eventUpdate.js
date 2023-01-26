@@ -42,7 +42,6 @@ const EventUpdate = ({ event }) => {
   const openedEvent = localStorage.getItem("updatingEvent");
   let Title = JSON.parse(openedEvent)?.title;
   let Loc = JSON.parse(openedEvent)?.location;
-  //localStorage.removeItem("updatingEvent");
 
   const handleDisable = (e) => {
     let allEndTimes = document.querySelector(".allEndTimes").childNodes;

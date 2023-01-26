@@ -16,12 +16,9 @@ const alignTasks = (renderedEvents) => {
   for (let i = 0; i < renderedEvents.length; i++) {
     countStack = [];
 
-    //renderedEvents[i].style.position = "relative";
-    //renderedEvents[i].style.zIndex = zIndex;
     parseInt(renderedEvents[i].style.height) > 50
       ? (renderedEvents[i].childNodes[0].style.flexDirection = "column")
       : (renderedEvents[i].style.height = "49px");
-    //zIndex++;
 
     stTime = renderedEvents[i]?.children[0].children[3].innerText;
     edTime = renderedEvents[i]?.children[0].children[4].innerText;
@@ -32,7 +29,7 @@ const alignTasks = (renderedEvents) => {
       renderedEvents[i - 1].appendChild(renderedEvents[i]);
 
       renderedEvents[i].style.marginLeft =
-        renderedEvents[i].parentElement.childNodes.length * 50 + "px";
+        renderedEvents[i].parentElement.childNodes.length * 100 + "px";
 
       if (!renderedEvents[i].children[0].children[3].innerText.includes(".")) {
         renderedEvents[i].style.marginTop =
@@ -50,6 +47,12 @@ const alignTasks = (renderedEvents) => {
           "px";
       }
     } else {
+      console.log(
+        checkStartTimeInclude(
+          renderedEvents,
+          renderedEvents[i].children[0].children[3].innerText
+        )
+      );
       if (
         checkStartTimeInclude(
           renderedEvents,
@@ -58,17 +61,13 @@ const alignTasks = (renderedEvents) => {
       ) {
         let parent = renderedEvents[i - 1];
 
-        // checkStartTimeInclude(
-        //   renderedEvents,
-        //   renderedEvents[i].children[0].children[3].innerText
-        // );
-
-        renderedEvents[i].style.marginLeft = "80px";
+        renderedEvents[i].style.marginLeft = "160px";
         let parentSt = parent.children[0].children[3].innerText;
         let thisSt = renderedEvents[i].children[0].children[3].innerText;
         let dif = thisSt - parentSt;
 
         parent.appendChild(renderedEvents[i]);
+
         if (renderedEvents[i].children[0].children[3].innerText.includes(".")) {
           renderedEvents[i].style.marginTop = dif * 100 - 85 + "px";
         } else {
@@ -76,7 +75,6 @@ const alignTasks = (renderedEvents) => {
         }
       }
     }
-    console.log(renderedEvents[i], renderedEvents[i].style.height);
   }
 };
 
@@ -86,7 +84,10 @@ const checkStartTimeInclude = (renderedEventss, currEventStartTime) => {
     let st = renderedEventss[i].children[0].children[3].innerText;
     let et = renderedEventss[i].children[0].children[4].innerText;
 
-    if (currEventStartTime > st && currEventStartTime < et) {
+    if (
+      parseFloat(currEventStartTime) > parseFloat(st) &&
+      parseFloat(currEventStartTime) < parseFloat(et)
+    ) {
       allEventsIncludingCurrStTime.push(renderedEventss[i]);
     }
   }
