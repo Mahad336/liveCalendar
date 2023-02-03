@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import AllDayEvent from "../eventLogics/AllDayEvent";
-import { alignTasks } from "./alignTasks";
-import Hour from "./Hour";
+import AllDayEvent from "../../components/event/AllDayEvent";
+import { eventsAlignment } from "../../helper/eventsAlignment";
+import Hour from "../../components/hour/Hour";
 import { Box } from "@chakra-ui/react";
+import { fetchAllEvents } from "../../utils/eventsAPI";
+import { useQuery } from "react-query";
 
 const Calendar = () => {
   const amHours = [];
@@ -14,50 +16,44 @@ const Calendar = () => {
 
   const isUpdated = () => setFlag(false);
 
-  async function getEvents() {
-    try {
-      const result = await fetch("/events", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      let { data } = await result.json();
-      let sortedEvents = data.events.sort((a, b) => {
-        let astartTime = new Date(a.startAt);
-        let bstartTime = new Date(b.startAt);
-        let aendTime = new Date(a.endAt);
-        let bendTime = new Date(b.endAt);
-        if (astartTime.getMinutes() == "30") {
-          astartTime = astartTime.getHours() + ".5";
-        } else {
-          astartTime = astartTime.getHours().toString();
-        }
-        if (aendTime.getMinutes() == "30") {
-          aendTime = aendTime.getHours() + ".5";
-        } else {
-          aendTime = aendTime.getHours().toString();
-        }
-        if (bstartTime.getMinutes() == "30") {
-          bstartTime = bstartTime.getHours() + ".5";
-        } else {
-          bstartTime = bstartTime.getHours().toString();
-        }
-        if (bendTime.getMinutes() == "30") {
-          bendTime = bendTime.getHours() + ".5";
-        } else {
-          bendTime = bendTime.getHours().toString();
-        }
+  const { data } = useQuery("allEvents", fetchAllEvents);
 
-        if (astartTime !== bstartTime) {
-          return astartTime - bstartTime;
-        }
-        return aendTime - astartTime - (bendTime - bstartTime);
-      });
-      setEvents(sortedEvents);
-      setDayEvents(data.dayEvents);
-      setFlag(true);
-    } catch (err) {
-      console.log("Error ", err);
-    }
+  async function getEvents() {
+    let sortedEvents = data.events.sort((a, b) => {
+      let astartTime = new Date(a.startAt);
+      let bstartTime = new Date(b.startAt);
+      let aendTime = new Date(a.endAt);
+      let bendTime = new Date(b.endAt);
+      if (astartTime.getMinutes() == "30") {
+        astartTime = astartTime.getHours() + ".5";
+      } else {
+        astartTime = astartTime.getHours().toString();
+      }
+      if (aendTime.getMinutes() == "30") {
+        aendTime = aendTime.getHours() + ".5";
+      } else {
+        aendTime = aendTime.getHours().toString();
+      }
+      if (bstartTime.getMinutes() == "30") {
+        bstartTime = bstartTime.getHours() + ".5";
+      } else {
+        bstartTime = bstartTime.getHours().toString();
+      }
+      if (bendTime.getMinutes() == "30") {
+        bendTime = bendTime.getHours() + ".5";
+      } else {
+        bendTime = bendTime.getHours().toString();
+      }
+
+      if (astartTime !== bstartTime) {
+        return astartTime - bstartTime;
+      }
+      return aendTime - astartTime - (bendTime - bstartTime);
+    });
+
+    setEvents(sortedEvents.filter((e) => e.isAllDay == false));
+    setDayEvents(sortedEvents.filter((e) => e.isAllDay == true));
+    setFlag(true);
   }
 
   function setRenderedEvents(event) {
@@ -72,8 +68,8 @@ const Calendar = () => {
   useEffect(() => {
     getEvents();
 
-    alignTasks(renderedEvents);
-  }, [flag]);
+    eventsAlignment(renderedEvents);
+  }, [flag, data]);
 
   return (
     <div className="calendar">

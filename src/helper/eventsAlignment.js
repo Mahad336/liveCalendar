@@ -1,4 +1,4 @@
-const alignTasks = (renderedEvents) => {
+const eventsAlignment = (renderedEvents) => {
   let time,
     time1,
     time2,
@@ -10,8 +10,6 @@ const alignTasks = (renderedEvents) => {
     count,
     zIndex = 10,
     countStack;
-
-  var greatestEvent, previousParent;
 
   for (let i = 0; i < renderedEvents.length; i++) {
     countStack = [];
@@ -47,12 +45,6 @@ const alignTasks = (renderedEvents) => {
           "px";
       }
     } else {
-      console.log(
-        checkStartTimeInclude(
-          renderedEvents,
-          renderedEvents[i].children[0].children[3].innerText
-        )
-      );
       if (
         checkStartTimeInclude(
           renderedEvents,
@@ -111,4 +103,4 @@ const checkStartTimeInclude = (renderedEventss, currEventStartTime) => {
   return smallestDurationEvent;
 };
 
-export { alignTasks };
+export { eventsAlignment };

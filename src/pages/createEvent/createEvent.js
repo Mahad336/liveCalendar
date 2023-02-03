@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AutoComplete from "../APIs/AutoComplete";
+import AutoComplete from "../../components/autoComplete/autoComplete";
 import { useNavigate } from "react-router-dom";
 import {
   Input,
@@ -17,9 +17,11 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader";
+import { Radio, RadioGroup } from "@chakra-ui/react";
 
-const Create = () => {
+const CreateEvent = () => {
   const time = [];
+  const [isAllDay, setIsAllDay] = useState("allday");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("lhr");
   const [startTime, setStartTime] = useState("0");
@@ -39,7 +41,6 @@ const Create = () => {
 
   const handleDisable = (e) => {
     let allEndTimes = document.querySelector(".allEndTimes").childNodes;
-    console.log(e.target.value);
     allEndTimes.forEach((e) => (e.disabled = false));
     for (let i = 0; i < allEndTimes.length; i++) {
       if (e.target.value == allEndTimes[i].textContent) {
@@ -53,7 +54,6 @@ const Create = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(location);
     const startAt = new Date();
     const endAt = new Date();
     if (startTime.includes(".")) {
@@ -72,13 +72,14 @@ const Create = () => {
     }
     setIsPending(true);
     try {
-      await fetch("/events/create", {
+      await fetch("/events/", {
         method: "POST",
         body: JSON.stringify({
           title,
           location,
           startAt,
           endAt,
+          isAllDay: isAllDay == "allday" ? true : false,
         }),
         headers: { "Content-Type": "application/json" },
       });
@@ -108,31 +109,41 @@ const Create = () => {
               <AutoComplete handleSetLocation={handleSetLocation} />
               <Divider borderColor="gray.300" />
 
-              <FormControl>
-                <FormLabel>Start Time</FormLabel>
-                <Select defaultValue="0" onChange={handleDisable}>
-                  {time.map((t) => (
-                    <option value={t} key={t}>
-                      {t}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>End Time</FormLabel>
-                <Select
-                  className="allEndTimes"
-                  defaultValue="0.5"
-                  onChange={(e) => setEndTime(e.target.value)}
-                >
-                  {time.map((t) => (
-                    <option value={t} key={t}>
-                      {t}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
+              <RadioGroup onChange={setIsAllDay} value={isAllDay}>
+                <Stack direction="row">
+                  <Radio value="allday">All day</Radio>
+                  <Radio value="timely">Timely</Radio>
+                </Stack>
+              </RadioGroup>
+              {isAllDay == "timely" && (
+                <>
+                  {" "}
+                  <FormControl>
+                    <FormLabel>Start Time</FormLabel>
+                    <Select defaultValue="0" onChange={handleDisable}>
+                      {time.map((t) => (
+                        <option value={t} key={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>End Time</FormLabel>
+                    <Select
+                      className="allEndTimes"
+                      defaultValue="0.5"
+                      onChange={(e) => setEndTime(e.target.value)}
+                    >
+                      {time.map((t) => (
+                        <option value={t} key={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
+              )}
               {!isPending && (
                 <Button
                   type="submit"
@@ -159,4 +170,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default CreateEvent;

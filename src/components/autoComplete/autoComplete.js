@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { InfoIcon } from "@chakra-ui/icons";
 import PlacesAutocomplete, {
   geocodeByAddress,
-  getLatLng,
 } from "react-places-autocomplete";
 import {
   FormControl,
@@ -13,13 +12,17 @@ import {
 } from "@chakra-ui/react";
 
 export default function AutoComplete(props) {
-  const { handleSetLocation, Loc } = props;
-
+  const { handleSetLocation } = props;
   const [address, setAddress] = React.useState("");
 
+  //waiting for Location to be defined to set address
+  useEffect(() => {
+    setAddress(props.LOC);
+  }, [props.LOC]);
+
+  //setting address and getting Location value
   const handleSelect = async (value) => {
     const results = await geocodeByAddress(value);
-    const latLng = await getLatLng(results[0]);
     handleSetLocation(value);
     setAddress(value);
   };
@@ -28,7 +31,9 @@ export default function AutoComplete(props) {
     <div>
       <PlacesAutocomplete
         value={address}
-        onChange={setAddress}
+        onChange={(value) => {
+          setAddress(value);
+        }}
         onSelect={handleSelect}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
@@ -37,7 +42,7 @@ export default function AutoComplete(props) {
               <FormLabel>Location</FormLabel>
               <InputGroup>
                 <InputLeftElement children={<InfoIcon />} />
-                <Input {...getInputProps({ placeholder: Loc })} />
+                <Input {...getInputProps({ placeholder: props.LOC })} />
               </InputGroup>
             </FormControl>
 
@@ -45,6 +50,7 @@ export default function AutoComplete(props) {
               {loading ? <div>...loading</div> : null}
 
               {suggestions.map((suggestion) => {
+                console.log(suggestion);
                 const style = {
                   backgroundColor: suggestion.active ? "#41b6e6" : "#fff",
                 };

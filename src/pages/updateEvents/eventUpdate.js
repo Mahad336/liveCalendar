@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import AutoComplete from "../APIs/AutoComplete";
-import { json, useNavigate } from "react-router-dom";
+import AutoComplete from "../../components/autoComplete/autoComplete";
+import { useNavigate } from "react-router-dom";
 import {
   Input,
   Stack,
@@ -9,7 +9,6 @@ import {
   Button,
   FormControl,
   Divider,
-  Text,
   FormLabel,
   Flex,
   Select,
@@ -17,7 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader";
-import { Envelope } from "react-bootstrap-icons";
+import { fetchAllEvents } from "../../utils/eventsAPI";
+import { useQuery } from "react-query";
 
 const EventUpdate = ({ event }) => {
   const time = [];
@@ -26,9 +26,15 @@ const EventUpdate = ({ event }) => {
   const [startTime, setStartTime] = useState("0");
   const [endTime, setEndTime] = useState("0");
   const [isPending, setIsPending] = useState(false);
+  const [currEvent, setCurrEvent] = useState();
   const id = window.location.href.split("/")[4];
-
   const navigate = useNavigate();
+
+  const { data } = useQuery("allEvents", fetchAllEvents);
+
+  useEffect(() => {
+    data && setCurrEvent(data.events.filter((e) => e._id == id)[0]);
+  }, [data]);
 
   for (let i = 0; i < 24; i++) {
     time.push(i);
@@ -39,13 +45,9 @@ const EventUpdate = ({ event }) => {
     setLocation(str);
   };
 
-  const openedEvent = localStorage.getItem("updatingEvent");
-  let Title = JSON.parse(openedEvent)?.title;
-  let Loc = JSON.parse(openedEvent)?.location;
-
   const handleDisable = (e) => {
     let allEndTimes = document.querySelector(".allEndTimes").childNodes;
-    console.log(e.target.value);
+
     allEndTimes.forEach((e) => (e.disabled = false));
     for (let i = 0; i < allEndTimes.length; i++) {
       if (e.target.value == allEndTimes[i].textContent) {
@@ -78,7 +80,7 @@ const EventUpdate = ({ event }) => {
     }
     setIsPending(true);
     try {
-      await fetch("/events/update", {
+      await fetch("/events/", {
         method: "PUT",
         body: JSON.stringify({
           id,
@@ -97,7 +99,7 @@ const EventUpdate = ({ event }) => {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    const endpoint = `/events/delete/${id}`;
+    const endpoint = `/events/${id}`;
 
     fetch(endpoint, { method: "DELETE" })
       .then((response) => response.json())
@@ -122,13 +124,16 @@ const EventUpdate = ({ event }) => {
                   <Input
                     type="name"
                     placeholder="Event Name"
-                    defaultValue={Title}
+                    defaultValue={currEvent?.title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </InputGroup>
               </FormControl>
 
-              <AutoComplete handleSetLocation={handleSetLocation} Loc={Loc} />
+              <AutoComplete
+                handleSetLocation={handleSetLocation}
+                LOC={currEvent?.location}
+              />
               <Divider borderColor="gray.300" />
 
               <FormControl>

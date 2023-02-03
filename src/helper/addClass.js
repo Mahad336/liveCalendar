@@ -1,4 +1,4 @@
-const getClassName = (height, startTime) => {
+const addClass = (height, startTime) => {
   height = parseInt(height);
   if (height <= 50) {
     if (startTime < Math.ceil(startTime)) {
@@ -11,4 +11,4 @@ const getClassName = (height, startTime) => {
   }
 };
 
-export { getClassName };
+export { addClass };

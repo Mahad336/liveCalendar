@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Input,
@@ -10,10 +10,11 @@ import {
   Divider,
   Text,
   Box,
-  Flex,
 } from "@chakra-ui/react";
 import { InfoIcon, EmailIcon, LockIcon } from "@chakra-ui/icons";
 import PasswordChecklist from "react-password-checklist";
+import { setEmailToken } from "../../../utils/handleToken";
+import { signUpUser } from "../../../utils/userAPI";
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,25 +29,17 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const result = await fetch("/signup", {
-        method: "POST",
-        body: JSON.stringify({ email, password, firstName, lastName }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await result.json();
-      if (data.errors) {
-        console.log(data.errors);
-        setEmailError(data.errors.email);
-        setPasswordError(data.errors.password);
-      }
-      if (data.user) {
-        setIsPending(true);
-        localStorage.setItem("email", data.email);
-        navigate("/calendar");
-      }
-    } catch (error) {
-      console.log(error);
+
+    const result = await signUpUser(email, password, firstName, lastName);
+
+    if (result.data && result.data.errors) {
+      setEmailError(result.data.errors.email);
+      setPasswordError(result.data.errors.password);
+    }
+    if (result.user) {
+      setIsPending(true);
+      setEmailToken(result.email);
+      navigate("/calendar");
     }
   };
 

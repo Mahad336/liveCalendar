@@ -1,4 +1,4 @@
-import Event from "../eventLogics/Event";
+import Event from "../event/Event";
 import { Box } from "@chakra-ui/react";
 
 const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
@@ -6,6 +6,8 @@ const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
   const eventListBot = [];
   events &&
     events.sort((a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? -1 : 1));
+
+  //settings all hours div in calendar view page
 
   events &&
     events.forEach((event) => {
@@ -21,6 +23,7 @@ const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
       } else {
         endTime = endTime.getHours().toString();
       }
+      //pushing events to eventListTop array
 
       if (startTime == currentHour) {
         eventListTop.push(

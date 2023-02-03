@@ -12,6 +12,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
+import { setEmailToken } from "../../../utils/handleToken";
+import { loginUser } from "../../../utils/userAPI";
+
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,27 +27,17 @@ const LoginForm = () => {
     e.preventDefault();
 
     setIsPending(true);
-    const iii =
-      "https://react-calendar-chakraserver-production.up.railway.app/login";
-    try {
-      const result = await fetch("/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await result.json();
-      if (data.errors) {
-        setIsPending(false);
-        setEmailError(data.errors.email);
-        setPasswordError(data.errors.password);
-      }
-      if (data.user) {
-        setIsPending(true);
-        localStorage.setItem("email", data.email);
-        navigate("/calendar");
-      }
-    } catch (error) {
-      console.log(error);
+
+    const result = await loginUser(email, password);
+    if (result.data && result.data.errors) {
+      setIsPending(false);
+      setEmailError(result.data.errors.email);
+      setPasswordError(result.data.errors.password);
+    }
+    if (result.user) {
+      setIsPending(true);
+      setEmailToken(result.email);
+      navigate("/calendar");
     }
   };
 

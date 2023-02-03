@@ -1,4 +1,4 @@
-const convertTime = (time1, time2) => {
+const handleTimeConversion = (time1, time2) => {
   const time = [];
   time1 = time1.substring(0, time1.indexOf(" "));
   time2 = time2.substring(0, time2.indexOf(" "));
@@ -21,4 +21,4 @@ const timeString = (time) => {
 
   return time;
 };
-export { convertTime, timeString };
+export { handleTimeConversion, timeString };

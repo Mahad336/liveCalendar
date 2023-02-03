@@ -7,10 +7,12 @@ import {
   IconButton,
   useColorMode,
   Image,
+  getToken,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import clc from "./calendarLogics/clock/clc.png";
-
+import clc from "../../assets/clc.png";
+import { clearEmailToken, getEmailToken } from "../../utils/handleToken";
+import CreateEvent from "../../pages/createEvent/createEvent";
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bgColor = { light: "gray.400", dark: "gray.700" };
@@ -18,18 +20,17 @@ const NavBar = () => {
 
   const navigate = useNavigate();
   const logOut = () => {
-    fetch("/logout", {
+    fetch("/user/logout", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
       .then((result) => {
-        localStorage.removeItem("email");
-        localStorage.clear();
+        clearEmailToken();
         navigate("/form");
       })
       .catch((err) => console.log(err));
   };
-  const email = localStorage.getItem("email");
+  const email = getEmailToken();
 
   return (
     <Flex
@@ -112,8 +113,7 @@ const NavBar = () => {
               {!window.location.href.includes("calendar") && (
                 <Link to="calendar">View Calendar</Link>
               )}
-              <Link to="create-event">Create Event</Link>
-              <Link to="create-all-day">Create All-Day Event</Link>
+              <Link to="event">Create Event</Link>
             </Flex>
           )}
         </>

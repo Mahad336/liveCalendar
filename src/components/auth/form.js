@@ -9,9 +9,9 @@ import {
   useColorMode,
   Flex,
 } from "@chakra-ui/react";
-import SignupForm from "./SignupForm";
-import LoginForm from "./LoginForm";
-import cld from "../calendarLogics/clock/calendar.jpg";
+import SignupForm from "../../pages/auth/signup/SignupForm";
+import LoginForm from "../../pages/auth/login/LoginForm";
+import cld from "../../assets/calendar.jpg";
 
 const Form = () => {
   const { colorMode } = useColorMode();

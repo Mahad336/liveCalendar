@@ -1,24 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
-import { timeString } from "../calendarLogics/convertTime";
-import { getClassName } from "../calendarLogics/getClassName";
-import { FiMoreVertical } from "react-icons/fi";
+import { timeString } from "../../helper/handleTimeConversion";
+import { addClass } from "../../helper/addClass";
 import { useNavigate } from "react-router-dom";
-import EventUpdate from "../updateEvents/eventUpdate";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
-  Button,
-  Portal,
-  Text,
-  Box,
-} from "@chakra-ui/react";
 
 const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
   const navigate = useNavigate();
@@ -30,28 +13,12 @@ const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    navigate("/event-update/" + event._id);
-    localStorage.setItem("updatingEvent", JSON.stringify(event));
-  };
-
-  const handleDelete = () => {
-    const id = event._id;
-    const endpoint = `/events/delete/${id}`;
-
-    fetch(endpoint, { method: "DELETE" })
-      .then((response) => response.json())
-      .then(() => {
-        isUpdated();
-        navigate("/calendar");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    navigate("/event/" + event._id);
   };
 
   useEffect(() => {
     const el2 = ref.current;
-    setClassName(getClassName(height, event.startAt));
+    setClassName(addClass(height, event.startAt));
     setRenderedEvents(el2);
   }, []);
 
