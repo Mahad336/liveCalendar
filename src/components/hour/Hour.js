@@ -3,25 +3,19 @@ import { Box } from "@chakra-ui/react";
 import { getStartEndTime } from "../../helper/handleTimeConversion";
 
 const Hour = ({ currentHour, events }) => {
-  const [eventListTop, eventListBot] = events
-    ? events.reduce(
-        (lists, event) => {
-          const { startTime } = getStartEndTime(event);
+  let eventListTop = [];
+  let eventListBot = [];
 
-          if (startTime == currentHour) {
-            lists[0].push(event);
-          } else if (
-            Math.floor(startTime) == currentHour &&
-            startTime.includes(".")
-          ) {
-            lists[1].push(event);
-          }
-
-          return lists;
-        },
-        [[], []]
-      )
-    : [[], []];
+  if (events) {
+    eventListTop = events.filter(
+      (event) => getStartEndTime(event).startTime == currentHour
+    );
+    eventListBot = events.filter(
+      (event) =>
+        Math.floor(getStartEndTime(event).startTime) == currentHour &&
+        getStartEndTime(event).startTime.includes(".")
+    );
+  }
 
   return (
     <Box filter="auto" brightness="90%">
