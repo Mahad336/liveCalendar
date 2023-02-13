@@ -1,25 +1,25 @@
 import React, { useRef, useEffect, useState } from "react";
-import { timeString } from "../../helper/handleTimeConversion";
+import { datetimetoString } from "../../helper/handleTimeConversion";
 import { addClass } from "../../helper/addClass";
 import { useNavigate } from "react-router-dom";
+import { getMaxNumOfCollision } from "../../helper/getNumCollisons.js";
 
-const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
+const Event = ({ event, startTime, endTime, events }) => {
   const navigate = useNavigate();
   const ref = useRef(null);
   const height = (endTime - startTime) * 100 - 2 + "px";
-  const time = timeString(startTime);
-  const [show, setShow] = useState(false);
+  const time = datetimetoString(startTime);
   const [className, setClassName] = useState("");
+  let marginLeft;
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
+  marginLeft = getMaxNumOfCollision(events, event, startTime) * 80 + "px";
+
+  const handleEdit = () => {
     navigate("/event/" + event._id);
   };
 
   useEffect(() => {
-    const el2 = ref.current;
     setClassName(addClass(height, event.startAt));
-    setRenderedEvents(el2);
   }, []);
 
   return (
@@ -28,15 +28,18 @@ const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
         className={className}
         ref={ref}
         id={event._id}
-        style={{ height: `${height}`, position: "relative", cursor: "pointer" }}
-        onClick={handleShow}
+        style={{
+          height: `${height}`,
+          position: "relative",
+          cursor: "pointer",
+          marginLeft: `${marginLeft}`,
+        }}
+        onClick={handleEdit}
       >
         <div className="content">
           <p>{time}</p>
           <h5>{event.title}</h5>
           <span>{event.location}</span>
-          <h5 style={{ display: "none" }}>{startTime}</h5>
-          <h5 style={{ display: "none" }}>{endTime}</h5>
         </div>
       </div>
     </>

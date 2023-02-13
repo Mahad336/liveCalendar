@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://react-calendar-chakraserver-production.up.railway.app",
+  baseURL: "http://localhost:8000",
+  withCredentials: true,
 });
 
 instance.defaults.headers.post["Content-Type"] = "application/json";

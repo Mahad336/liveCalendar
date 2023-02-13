@@ -29,15 +29,18 @@ const LoginForm = () => {
     setIsPending(true);
 
     const result = await loginUser(email, password);
-    if (result.data && result.data.errors) {
-      setIsPending(false);
-      setEmailError(result.data.errors.email);
-      setPasswordError(result.data.errors.password);
-    }
-    if (result.user) {
-      setIsPending(true);
-      setEmailToken(result.email);
-      navigate("/calendar");
+    if (result) {
+      if (result.data && result.data.errors) {
+        setIsPending(false);
+        setEmailError(result.data.errors.email);
+        setPasswordError(result.data.errors.password);
+      }
+
+      if (result.user) {
+        setIsPending(true);
+        setEmailToken(result.email);
+        navigate("/calendar");
+      }
     }
   };
 

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import AllDayEvent from "../../components/event/AllDayEvent";
-import { eventsAlignment } from "../../helper/eventsAlignment";
 import Hour from "../../components/hour/Hour";
-import { Box } from "@chakra-ui/react";
 import { fetchAllEvents } from "../../utils/eventsAPI";
 import { useQuery } from "react-query";
 
@@ -12,13 +10,10 @@ const Calendar = () => {
   const renderedEvents = [];
   const [events, setEvents] = useState([]);
   const [dayEvents, setDayEvents] = useState([]);
-  const [flag, setFlag] = useState(false);
-
-  const isUpdated = () => setFlag(false);
 
   const { data } = useQuery("allEvents", fetchAllEvents);
 
-  async function getEvents() {
+  async function getEvents(data) {
     let sortedEvents = data.events.sort((a, b) => {
       let astartTime = new Date(a.startAt);
       let bstartTime = new Date(b.startAt);
@@ -53,11 +48,10 @@ const Calendar = () => {
 
     setEvents(sortedEvents.filter((e) => e.isAllDay == false));
     setDayEvents(sortedEvents.filter((e) => e.isAllDay == true));
-    setFlag(true);
   }
 
   function setRenderedEvents(event) {
-    renderedEvents.push(event);
+    //renderedEvents.push(event);
   }
 
   for (let i = 0; i < 12; i++) {
@@ -66,10 +60,9 @@ const Calendar = () => {
   }
 
   useEffect(() => {
-    getEvents();
-
-    eventsAlignment(renderedEvents);
-  }, [flag, data]);
+    if (data) getEvents(data);
+    //eventsAlignment(renderedEvents);
+  }, [data]);
 
   return (
     <div className="calendar">
@@ -81,7 +74,7 @@ const Calendar = () => {
       <div className="all-day-task">
         {dayEvents &&
           dayEvents.map((event) => (
-            <AllDayEvent event={event} isUpdated={isUpdated} key={event._id} />
+            <AllDayEvent event={event} key={event._id} />
           ))}
       </div>
       <div className="am">
@@ -93,8 +86,7 @@ const Calendar = () => {
                 currentHour={hour}
                 key={index}
                 events={events}
-                setRenderedEvents={setRenderedEvents}
-                isUpdated={isUpdated}
+                //setRenderedEvents={setRenderedEvents}
               />
             ))}
         </div>
@@ -108,8 +100,7 @@ const Calendar = () => {
                 currentHour={hour}
                 key={index}
                 events={events}
-                setRenderedEvents={setRenderedEvents}
-                isUpdated={isUpdated}
+                // setRenderedEvents={setRenderedEvents}
               />
             ))}
         </div>

@@ -80,10 +80,9 @@ const EventUpdate = ({ event }) => {
     }
     setIsPending(true);
     try {
-      await fetch("/events/", {
+      await fetch("/events/" + id, {
         method: "PUT",
         body: JSON.stringify({
-          id,
           title,
           location,
           startAt,

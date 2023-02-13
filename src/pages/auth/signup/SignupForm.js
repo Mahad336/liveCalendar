@@ -31,15 +31,16 @@ const SignupForm = () => {
     e.preventDefault();
 
     const result = await signUpUser(email, password, firstName, lastName);
-
-    if (result.data && result.data.errors) {
-      setEmailError(result.data.errors.email);
-      setPasswordError(result.data.errors.password);
-    }
-    if (result.user) {
-      setIsPending(true);
-      setEmailToken(result.email);
-      navigate("/calendar");
+    if (result) {
+      if (result.data && result.data.errors) {
+        setEmailError(result.data.errors.email);
+        setPasswordError(result.data.errors.password);
+      }
+      if (result.user) {
+        setIsPending(true);
+        setEmailToken(result.email);
+        navigate("/calendar");
+      }
     }
   };
 

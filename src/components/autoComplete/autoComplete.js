@@ -50,7 +50,6 @@ export default function AutoComplete(props) {
               {loading ? <div>...loading</div> : null}
 
               {suggestions.map((suggestion) => {
-                console.log(suggestion);
                 const style = {
                   backgroundColor: suggestion.active ? "#41b6e6" : "#fff",
                 };

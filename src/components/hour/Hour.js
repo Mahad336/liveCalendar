@@ -1,67 +1,56 @@
 import Event from "../event/Event";
 import { Box } from "@chakra-ui/react";
+import { getStartEndTime } from "../../helper/handleTimeConversion";
 
-const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
-  const eventListTop = [];
-  const eventListBot = [];
-  events &&
-    events.sort((a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? -1 : 1));
+const Hour = ({ currentHour, events }) => {
+  const [eventListTop, eventListBot] = events
+    ? events.reduce(
+        (lists, event) => {
+          const { startTime } = getStartEndTime(event);
 
-  //settings all hours div in calendar view page
+          if (startTime == currentHour) {
+            lists[0].push(event);
+          } else if (
+            Math.floor(startTime) == currentHour &&
+            startTime.includes(".")
+          ) {
+            lists[1].push(event);
+          }
 
-  events &&
-    events.forEach((event) => {
-      let startTime = new Date(event.startAt);
-      let endTime = new Date(event.endAt);
-      if (startTime.getMinutes() == "30") {
-        startTime = startTime.getHours() + ".5";
-      } else {
-        startTime = startTime.getHours().toString();
-      }
-      if (endTime.getMinutes() == "30") {
-        endTime = endTime.getHours() + ".5";
-      } else {
-        endTime = endTime.getHours().toString();
-      }
-      //pushing events to eventListTop array
-
-      if (startTime == currentHour) {
-        eventListTop.push(
-          <Event
-            event={event}
-            key={event._id}
-            setRenderedEvents={setRenderedEvents}
-            isUpdated={isUpdated}
-            startTime={startTime}
-            endTime={endTime}
-          />
-        );
-      } else if (Math.floor(startTime) == currentHour) {
-        eventListBot.push(
-          <Event
-            event={event}
-            setRenderedEvents={setRenderedEvents}
-            isUpdated={isUpdated}
-            startTime={startTime}
-            endTime={endTime}
-            key={event._id}
-          />
-        );
-      }
-    });
+          return lists;
+        },
+        [[], []]
+      )
+    : [[], []];
 
   return (
     <Box filter="auto" brightness="90%">
       <div className="hour">
-        <div className="full">{currentHour + ":00"}</div>
+        <div className="full">{`${currentHour}:00`}</div>
         <div className="half">
           <div id={`full-${currentHour}`} className="half-top">
-            {eventListTop}
+            {eventListTop.map((event) => (
+              <Event
+                event={event}
+                key={event._id}
+                startTime={getStartEndTime(event).startTime}
+                endTime={getStartEndTime(event).endTime}
+                events={events}
+              />
+            ))}
           </div>
           <div className="half-bottom">
-            <div className="half-bottom-1">{currentHour + ":30"}</div>
+            <div className="half-bottom-1">{`${currentHour}:30`}</div>
             <div className="half-bottom-2" id={`half-${currentHour}`}>
-              {eventListBot}
+              {eventListBot.map((event) => (
+                <Event
+                  event={event}
+                  startTime={getStartEndTime(event).startTime}
+                  endTime={getStartEndTime(event).endTime}
+                  key={event._id}
+                  events={events}
+                />
+              ))}
             </div>
           </div>
         </div>

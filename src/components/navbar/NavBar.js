@@ -7,29 +7,19 @@ import {
   IconButton,
   useColorMode,
   Image,
-  getToken,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import clc from "../../assets/clc.png";
-import { clearEmailToken, getEmailToken } from "../../utils/handleToken";
-import CreateEvent from "../../pages/createEvent/createEvent";
+import { getEmailToken } from "../../utils/handleToken";
+
+import { logoutUser } from "../../utils/userAPI";
+
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bgColor = { light: "gray.400", dark: "gray.700" };
   const textColor = { light: "black", dark: "gray.100" };
 
   const navigate = useNavigate();
-  const logOut = () => {
-    fetch("/user/logout", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((result) => {
-        clearEmailToken();
-        navigate("/form");
-      })
-      .catch((err) => console.log(err));
-  };
   const email = getEmailToken();
 
   return (
@@ -50,7 +40,12 @@ const NavBar = () => {
               width="30%"
             >
               <Text>{email}</Text>
-              <a onClick={logOut}>
+              <a
+                onClick={() => {
+                  const result = logoutUser();
+                  result ? navigate("/") : "";
+                }}
+              >
                 <Button color="teal.700" size="sm">
                   Logout
                 </Button>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-const AllDayEvent = ({ event, isUpdated }) => {
+const AllDayEvent = ({ event }) => {
   const navigate = useNavigate();
   const handleShow = () => {
     navigate("/event/" + event._id);
