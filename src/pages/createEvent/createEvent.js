@@ -9,7 +9,6 @@ import {
   Button,
   FormControl,
   Divider,
-  Text,
   FormLabel,
   Flex,
   Select,
@@ -18,22 +17,22 @@ import {
 import { InfoIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Radio, RadioGroup } from "@chakra-ui/react";
+import { StringtoDatetime } from "../../helper/handleTimeConversion";
+import { createEvent } from "../../utils/eventsAPI";
 
 const CreateEvent = () => {
-  const time = [];
   const [isAllDay, setIsAllDay] = useState("allday");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("lhr");
   const [startTime, setStartTime] = useState("0");
-  const [endTime, setEndTime] = useState("0");
+  const [endTime, setEndTime] = useState("0.5");
   const [isPending, setIsPending] = useState(false);
+  let time = [];
 
   const navigate = useNavigate();
 
-  for (let i = 0; i < 24; i++) {
-    time.push(i);
-    time.push(i + 0.5);
-  }
+  // making array of 24 hours
+  time = Array.from({ length: 48 }, (v, i) => i / 2);
 
   const handleSetLocation = (str) => {
     setLocation(str);
@@ -54,39 +53,16 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const startAt = new Date();
-    const endAt = new Date();
-    if (startTime.includes(".")) {
-      startAt.setHours(
-        startTime.substring(0, startTime.indexOf(".")),
-        "30",
-        "00"
-      );
-    } else {
-      startAt.setHours(startTime, "00", "00");
-    }
-    if (endTime.includes(".")) {
-      endAt.setHours(endTime.substring(0, endTime.indexOf(".")), "30", "00");
-    } else {
-      endAt.setHours(endTime, "00", "00");
-    }
-    setIsPending(true);
-    try {
-      await fetch("/events/", {
-        method: "POST",
-        body: JSON.stringify({
-          title,
-          location,
-          startAt,
-          endAt,
-          isAllDay: isAllDay == "allday" ? true : false,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      navigate("/calendar");
-    } catch (e) {
-      console.log(e);
-    }
+    const { startAt, endAt } = StringtoDatetime(startTime, endTime);
+    let alldayCheck = isAllDay == "allday" ? true : false;
+    const result = await createEvent(
+      title,
+      location,
+      startAt,
+      endAt,
+      alldayCheck
+    );
+    if (result) navigate("/calendar");
   };
 
   return (

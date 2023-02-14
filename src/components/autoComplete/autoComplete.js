@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { InfoIcon } from "@chakra-ui/icons";
-import PlacesAutocomplete, {
-  geocodeByAddress,
-} from "react-places-autocomplete";
+import PlacesAutocomplete from "react-places-autocomplete";
 import {
   FormControl,
   InputLeftElement,
@@ -22,7 +20,6 @@ export default function AutoComplete(props) {
 
   //setting address and getting Location value
   const handleSelect = async (value) => {
-    const results = await geocodeByAddress(value);
     handleSetLocation(value);
     setAddress(value);
   };
@@ -30,7 +27,7 @@ export default function AutoComplete(props) {
   return (
     <div>
       <PlacesAutocomplete
-        value={address}
+        value={address || ""}
         onChange={(value) => {
           setAddress(value);
         }}

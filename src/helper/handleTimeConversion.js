@@ -1,14 +1,21 @@
-const StringtoDatetime = (time1, time2) => {
-  const time = [];
-  time1 = time1.substring(0, time1.indexOf(" "));
-  time2 = time2.substring(0, time2.indexOf(" "));
-  time1.includes(":30")
-    ? time.push(parseFloat(time1.replace(":30", ".5")))
-    : time.push(parseFloat(time1));
-  time2.includes(":30")
-    ? time.push(parseFloat(time2.replace(":30", ".5")))
-    : time.push(parseFloat(time2));
-  return time;
+const StringtoDatetime = (startTime, endTime) => {
+  const startAt = new Date();
+  const endAt = new Date();
+  if (startTime.includes(".")) {
+    startAt.setHours(
+      startTime.substring(0, startTime.indexOf(".")),
+      "30",
+      "00"
+    );
+  } else {
+    startAt.setHours(startTime, "00", "00");
+  }
+  if (endTime.includes(".")) {
+    endAt.setHours(endTime.substring(0, endTime.indexOf(".")), "30", "00");
+  } else {
+    endAt.setHours(endTime, "00", "00");
+  }
+  return { startAt, endAt };
 };
 
 const datetimetoString = (time) => {
@@ -22,22 +29,6 @@ const datetimetoString = (time) => {
   return time;
 };
 
-// const getStartEndTime = (event) => {
-//   let startTime = new Date(event?.startAt);
-//   let endTime = new Date(event?.endAt);
-//   if (startTime.getMinutes() == "30") {
-//     startTime = startTime.getHours() + ".5";
-//   } else {
-//     startTime = startTime.getHours().toString();
-//   }
-//   if (endTime.getMinutes() == "30") {
-//     endTime = endTime.getHours() + ".5";
-//   } else {
-//     endTime = endTime.getHours().toString();
-//   }
-
-//   return { startTime, endTime };
-// };
 const getHourFormat = (time) =>
   time.getMinutes() === 30
     ? `${time.getHours()}.5`

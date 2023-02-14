@@ -5,6 +5,5 @@ import { getEmailToken } from "../../utils/handleToken";
 
 export default function PrivateRoutes() {
   const requireAuth = getEmailToken();
-
   return requireAuth ? <Outlet /> : <Navigate to="/form" />;
 }

@@ -1,21 +1,23 @@
+import React, { useMemo } from "react";
 import Event from "../event/Event";
 import { Box } from "@chakra-ui/react";
 import { getStartEndTime } from "../../helper/handleTimeConversion";
 
 const Hour = ({ currentHour, events }) => {
-  let eventListTop = [];
-  let eventListBot = [];
+  const eventMap = useMemo(() => {
+    const map = {};
+    events.forEach((event) => {
+      const key = getStartEndTime(event).startTime;
+      if (!map[key]) {
+        map[key] = [];
+      }
+      map[key].push(event);
+    });
+    return map;
+  }, [events]);
 
-  if (events) {
-    eventListTop = events.filter(
-      (event) => getStartEndTime(event).startTime == currentHour
-    );
-    eventListBot = events.filter(
-      (event) =>
-        Math.floor(getStartEndTime(event).startTime) == currentHour &&
-        getStartEndTime(event).startTime.includes(".")
-    );
-  }
+  const filteredEventsTop = eventMap[`${currentHour}`] || [];
+  const filteredEventsBot = eventMap[`${currentHour}.5`] || [];
 
   return (
     <Box filter="auto" brightness="90%">
@@ -23,7 +25,7 @@ const Hour = ({ currentHour, events }) => {
         <div className="full">{`${currentHour}:00`}</div>
         <div className="half">
           <div id={`full-${currentHour}`} className="half-top">
-            {eventListTop.map((event) => (
+            {filteredEventsTop.map((event) => (
               <Event
                 event={event}
                 key={event._id}
@@ -36,7 +38,7 @@ const Hour = ({ currentHour, events }) => {
           <div className="half-bottom">
             <div className="half-bottom-1">{`${currentHour}:30`}</div>
             <div className="half-bottom-2" id={`half-${currentHour}`}>
-              {eventListBot.map((event) => (
+              {filteredEventsBot.map((event) => (
                 <Event
                   event={event}
                   startTime={getStartEndTime(event).startTime}

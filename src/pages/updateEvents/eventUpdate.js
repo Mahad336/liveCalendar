@@ -16,11 +16,15 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader";
-import { fetchAllEvents } from "../../utils/eventsAPI";
+import {
+  deleteEvent,
+  fetchAllEvents,
+  updateEvent,
+} from "../../utils/eventsAPI";
+import { StringtoDatetime } from "../../helper/handleTimeConversion";
 import { useQuery } from "react-query";
 
 const EventUpdate = ({ event }) => {
-  const time = [];
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("lhr");
   const [startTime, setStartTime] = useState("0");
@@ -28,6 +32,7 @@ const EventUpdate = ({ event }) => {
   const [isPending, setIsPending] = useState(false);
   const [currEvent, setCurrEvent] = useState();
   const id = window.location.href.split("/")[4];
+  let time = Array.from({ length: 48 }, (_, i) => i / 2);
   const navigate = useNavigate();
 
   const { data } = useQuery("allEvents", fetchAllEvents);
@@ -35,11 +40,6 @@ const EventUpdate = ({ event }) => {
   useEffect(() => {
     data && setCurrEvent(data.events.filter((e) => e._id == id)[0]);
   }, [data]);
-
-  for (let i = 0; i < 24; i++) {
-    time.push(i);
-    time.push(i + 0.5);
-  }
 
   const handleSetLocation = (str) => {
     setLocation(str);
@@ -62,52 +62,17 @@ const EventUpdate = ({ event }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const startAt = new Date();
-    const endAt = new Date();
-    if (startTime.includes(".")) {
-      startAt.setHours(
-        startTime.substring(0, startTime.indexOf(".")),
-        "30",
-        "00"
-      );
-    } else {
-      startAt.setHours(startTime, "00", "00");
-    }
-    if (endTime.includes(".")) {
-      endAt.setHours(endTime.substring(0, endTime.indexOf(".")), "30", "00");
-    } else {
-      endAt.setHours(endTime, "00", "00");
-    }
+    const { startAt, endAt } = StringtoDatetime(startTime, endTime);
     setIsPending(true);
-    try {
-      await fetch("/events/" + id, {
-        method: "PUT",
-        body: JSON.stringify({
-          title,
-          location,
-          startAt,
-          endAt,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      navigate("/calendar");
-    } catch (e) {
-      console.log(e);
-    }
+    const result = await updateEvent(id, title, location, startAt, endAt);
+    if (result) navigate("/calendar");
   };
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    const endpoint = `/events/${id}`;
-
-    fetch(endpoint, { method: "DELETE" })
-      .then((response) => response.json())
-      .then(() => {
-        navigate("/calendar");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setIsPending(true);
+    const result = await deleteEvent(id);
+    if (result) navigate("/calendar");
   };
 
   return (

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import clc from "../../assets/clc.png";
-import { getEmailToken } from "../../utils/handleToken";
+import { clearEmailToken, getEmailToken } from "../../utils/handleToken";
 
 import { logoutUser } from "../../utils/userAPI";
 
@@ -43,7 +43,10 @@ const NavBar = () => {
               <a
                 onClick={() => {
                   const result = logoutUser();
-                  result ? navigate("/") : "";
+                  if (result) {
+                    clearEmailToken();
+                    navigate("/");
+                  }
                 }}
               >
                 <Button color="teal.700" size="sm">

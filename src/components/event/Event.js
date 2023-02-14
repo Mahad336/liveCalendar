@@ -1,15 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { datetimetoString } from "../../helper/handleTimeConversion";
-import { addClass } from "../../helper/addClass";
 import { useNavigate } from "react-router-dom";
 import { getMaxNumOfCollision } from "../../helper/getNumCollisons.js";
 
 const Event = ({ event, startTime, endTime, events }) => {
   const navigate = useNavigate();
-  const ref = useRef(null);
   const height = (endTime - startTime) * 100 - 2 + "px";
+  const className = parseInt(height) <= 50 ? "event-half-bot" : "event";
   const time = datetimetoString(startTime);
-  const [className, setClassName] = useState("");
   let marginLeft;
 
   marginLeft = getMaxNumOfCollision(events, event, startTime) * 80 + "px";
@@ -18,15 +16,10 @@ const Event = ({ event, startTime, endTime, events }) => {
     navigate("/event/" + event._id);
   };
 
-  useEffect(() => {
-    setClassName(addClass(height, event.startAt));
-  }, []);
-
   return (
     <>
       <div
         className={className}
-        ref={ref}
         id={event._id}
         style={{
           height: `${height}`,
